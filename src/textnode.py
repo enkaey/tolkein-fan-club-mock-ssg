@@ -1,6 +1,7 @@
 from enum import StrEnum
 
 class TextType(StrEnum):
+    TEXT = "text"
     BOLD = "**"
     ITALIC = "_"
     CODE = "`"
@@ -22,6 +23,3 @@ class TextNode:
     
     def __repr__(self) -> str:
         return f"TextNode({self.text!r}, {self.text_type}, {self.url!r})"
-
-
-    

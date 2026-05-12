@@ -11,6 +11,10 @@ class LeafNode(HTMLNode):
         if not self.tag:
             return f"{self.value}"
         
+        if self.tag == "img":
+            #<img> is self enclosing
+            return f'<{self.tag}{self.props_to_html()}>'
+        
         return f'<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>'
     
     def __repr__(self) -> str:
