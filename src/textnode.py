@@ -1,6 +1,6 @@
-from enum import StrEnum
+from enum import Enum
 
-class TextType(StrEnum):
+class TextType(Enum):
     TEXT = "text"
     BOLD = "**"
     ITALIC = "_"
