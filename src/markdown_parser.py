@@ -1,4 +1,15 @@
 from textnode import TextNode, TextType
+import re
+
+def extract_markdown_images(text):
+    capture_img = r"!\[(.*?)\]\((.*?)\)"
+    matches = re.findall(capture_img, text)
+    return matches
+    
+def extract_markdown_links(text):
+    capture_link = r"(?<!!)\[(.*?)\]\((.*?)\)"
+    matches = re.findall(capture_link, text)
+    return matches
 
 def split_nodes_delimiter(old_nodes, delimiter):
     new_nodes = []
@@ -64,14 +75,97 @@ def single_node_delimiter(node, delimiter):
                 new_nodes.append(TextNode(inner_text, target_type))
     return new_nodes
 
+def split_nodes_link(old_nodes):
+    
+    new_nodes = []
+
+    for node in old_nodes:
+        if node.text_type != TextType.TEXT:
+            new_nodes.append(node)
+            continue
+
+        current_text = node.text
+        links = extract_markdown_links(current_text)
+
+        if not links:
+            new_nodes.append(node)
+            continue
+
+        for link in links:
+            alt_text, url = link
+
+            # Split node.text in two, based on the link
+            sections = current_text.split(f"[{alt_text}]({url})", 1)
+
+            if sections[0] != "":
+                new_nodes.append(TextNode(sections[0], TextType.TEXT))
+            
+            new_nodes.append(TextNode(alt_text, TextType.LINK, url))
+
+            # Inherited to check for next set of URLs, if any
+            current_text = sections[1]
+
+        if current_text != "":
+            new_nodes.append(TextNode(current_text, TextType.TEXT))
+
+    return new_nodes
+
+def split_nodes_images(old_nodes):
+    
+    new_nodes = []
+
+    for node in old_nodes:
+        if node.text_type != TextType.TEXT:
+            new_nodes.append(node)
+            continue
+
+        current_text = node.text
+        links = extract_markdown_images(current_text)
+
+        if not links:
+            new_nodes.append(node)
+            continue
+
+        for link in links:
+            alt_text, url = link
+
+            # Split node.text in two, based on the link
+            sections = current_text.split(f"![{alt_text}]({url})", 1)
+
+            if sections[0] != "":
+                new_nodes.append(TextNode(sections[0], TextType.TEXT))
+            
+            new_nodes.append(TextNode(alt_text, TextType.IMG, url))
+
+            # Inherited to check for next set of URLs, if any
+            current_text = sections[1]
+
+        if current_text != "":
+            new_nodes.append(TextNode(current_text, TextType.TEXT))
+
+    return new_nodes
 
 def text_to_textnodes(text):
     nodes = [TextNode(text, TextType.TEXT)]
+
+    # 1. First, split out the complex block structures (Images FIRST, then Links)
+    nodes = split_nodes_images(nodes)
+    nodes = split_nodes_link(nodes)
+
+    # 2. Next, pass the remaining plain text blocks down the recursive engine
     nodes = split_nodes_delimiter(nodes, "**") #Bold
     nodes = split_nodes_delimiter(nodes, "_") #Italics
     nodes = split_nodes_delimiter(nodes, "`") #Code Block
     return nodes
 
+
 # Test Cases-------------
 # nodes = text_to_textnodes("This **is _text_** with a `code block` _word_")
 # print('\n'.join([f"{node}" for node in nodes]))
+
+# text = "This is **bold** text with an ![image](https://boot.dev) and a [link](https://boot.dev) with `code` and _italics_"
+
+# nodes = text_to_textnodes(text)
+
+# expected = "".join([f'{node}\n' for node in nodes])
+# print(expected)

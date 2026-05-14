@@ -51,3 +51,50 @@ class TestMarkdownParser(unittest.TestCase):
         ]
         self.assertEqual(nodes, expected)
         self.assertTrue(all(node.text != "" for node in nodes))
+    
+    def test_starts_and_ends_with_tokens(self):
+        # Edge case: checks what happens when tokens sit at the absolute boundary edges
+        text = "![img](src)[link](href)"
+        nodes = text_to_textnodes(text)
+        
+        expected = [
+            TextNode("img", TextType.IMG, "src"),
+            TextNode("link", TextType.LINK, "href"),
+        ]
+        self.assertEqual(nodes, expected)
+    
+    def test_full_mix(self):
+        # A full mixture of links, images, code, bold, and italics in a single line
+        text = "This is **bold** text with an ![image](https://boot.dev) and a [link](https://boot.dev) with `code` and _italics_"
+        nodes = text_to_textnodes(text)
+        
+        expected = [
+            TextNode("This is ", TextType.TEXT),
+            TextNode("bold", TextType.BOLD),
+            TextNode(" text with an ", TextType.TEXT),
+            TextNode("image", TextType.IMG, "https://boot.dev"),
+            TextNode(" and a ", TextType.TEXT),
+            TextNode("link", TextType.LINK, "https://boot.dev"),
+            TextNode(" with ", TextType.TEXT),
+            TextNode("code", TextType.CODE),
+            TextNode(" and ", TextType.TEXT),
+            TextNode("italics", TextType.ITALIC),
+        ]
+        self.assertEqual(nodes, expected)
+    
+    def test_multiple_images_and_links(self):
+        # Verifies that the loop eats through multiple links/images consecutively
+        text = "Check ![one](url1) and ![two](url2) or click [here](link1) or [there](link2)"
+        nodes = text_to_textnodes(text)
+        
+        expected = [
+            TextNode("Check ", TextType.TEXT),
+            TextNode("one", TextType.IMG, "url1"),
+            TextNode(" and ", TextType.TEXT),
+            TextNode("two", TextType.IMG, "url2"),
+            TextNode(" or click ", TextType.TEXT),
+            TextNode("here", TextType.LINK, "link1"),
+            TextNode(" or ", TextType.TEXT),
+            TextNode("there", TextType.LINK, "link2"),
+        ]
+        self.assertEqual(nodes, expected)
