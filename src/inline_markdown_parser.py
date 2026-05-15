@@ -2,12 +2,12 @@ from textnode import TextNode, TextType
 import re
 
 def extract_markdown_images(text):
-    capture_img = r"!\[(.*?)\]\((.*?)\)"
+    capture_img = r"!\[([^\[\]]*)\]\(([^\(\)]*)\)"
     matches = re.findall(capture_img, text)
     return matches
     
 def extract_markdown_links(text):
-    capture_link = r"(?<!!)\[(.*?)\]\((.*?)\)"
+    capture_link = r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)"
     matches = re.findall(capture_link, text)
     return matches
 

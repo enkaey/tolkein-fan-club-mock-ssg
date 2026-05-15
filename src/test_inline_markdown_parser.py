@@ -1,6 +1,6 @@
 import unittest
 from textnode import TextNode, TextType
-from markdown_parser import text_to_textnodes
+from inline_markdown_parser import text_to_textnodes
 
 class TestMarkdownParser(unittest.TestCase):
     def test_recursive_nested_formatting(self):
