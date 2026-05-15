@@ -1,17 +1,19 @@
 from textnode import TextNode, TextType
 import re
 
-def extract_markdown_images(text):
+def extract_markdown_images(text: str) -> list[tuple]:
     capture_img = r"!\[([^\[\]]*)\]\(([^\(\)]*)\)"
     matches = re.findall(capture_img, text)
     return matches
     
-def extract_markdown_links(text):
+def extract_markdown_links(text: str) -> list[tuple]:
     capture_link = r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)"
     matches = re.findall(capture_link, text)
     return matches
 
-def split_nodes_delimiter(old_nodes, delimiter):
+def split_nodes_delimiter(
+        old_nodes: list[object], delimiter: str
+        ) -> list[object]:
     new_nodes = []
 
     for node in old_nodes:
@@ -23,7 +25,7 @@ def split_nodes_delimiter(old_nodes, delimiter):
     return new_nodes
 
 
-def single_node_delimiter(node, delimiter):
+def single_node_delimiter(node: object, delimiter: str) -> list[object]:
     valid_delimiters = {
         "`": TextType.CODE,
         "**": TextType.BOLD,
@@ -75,7 +77,7 @@ def single_node_delimiter(node, delimiter):
                 new_nodes.append(TextNode(inner_text, target_type))
     return new_nodes
 
-def split_nodes_link(old_nodes):
+def split_nodes_link(old_nodes: list[object]) -> list[object]:
     
     new_nodes = []
 
@@ -110,7 +112,7 @@ def split_nodes_link(old_nodes):
 
     return new_nodes
 
-def split_nodes_images(old_nodes):
+def split_nodes_images(old_nodes: list[object]) -> list[object]:
     
     new_nodes = []
 
@@ -145,7 +147,7 @@ def split_nodes_images(old_nodes):
 
     return new_nodes
 
-def text_to_textnodes(text):
+def text_to_textnodes(text: str) -> list[object]:
     nodes = [TextNode(text, TextType.TEXT)]
 
     # 1. First, split out the complex block structures (Images FIRST, then Links)

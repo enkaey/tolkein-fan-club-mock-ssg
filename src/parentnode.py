@@ -1,7 +1,7 @@
 from htmlnode import HTMLNode
 
 class ParentNode(HTMLNode):
-    def __init__(self, tag, children, props=None):
+    def __init__(self, tag: str, children: list[object], props=None):
         if children is not None:
             if not isinstance(children, list):
                 raise TypeError("Children must be a list of HTMLNode objects")
@@ -12,7 +12,7 @@ class ParentNode(HTMLNode):
             
         super().__init__(tag, None, children, props)
     
-    def to_html(self):
+    def to_html(self) -> str:
         if not self.tag:
             raise ValueError("Invalid HTML: no tag")
         if not self.children:

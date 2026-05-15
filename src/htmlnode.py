@@ -8,7 +8,7 @@ class HTMLNode:
     def to_html(self):
         raise NotImplementedError("to_html method not implemented")
     
-    def props_to_html(self):
+    def props_to_html(self) -> str:
         if self.props is None:
             return ''
         to_return = "".join([f' {attr}="{value}"' for attr, value in self.props.items()])

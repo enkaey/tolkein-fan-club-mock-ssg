@@ -8,29 +8,29 @@ class BlockType(Enum):
     ORDERED_LIST = "ordered_list"
     PARAGRAPH = "paragraph"
 
-def validate_ordered_list(block):
+def validate_ordered_list(block: str) -> bool:
     lines = block.split("\n")
     return all(
         [line.startswith(f"{i + 1}. ") for i, line in enumerate(lines)]
         )
 
-def validate_unordered_list(block):
+def validate_unordered_list(block: str) -> bool:
     lines = block.split("\n")
     return all(
         line.startswith("- ") or line.startswith("* ") for line in lines
         )
 
-def validate_quote_block(block):
+def validate_quote_block(block: str) -> bool:
     lines = block.split("\n")
     return all(
         line.startswith(">") for line in lines
     )
 
-def markdown_to_blocks(markdown):
+def markdown_to_blocks(markdown: str) -> list[str]:
     blocks = markdown.strip().split("\n\n")
     return [block.strip() for block in blocks if block.strip() != ""]
 
-def block_to_block_type(block):
+def block_to_block_type(block: str) -> Enum:
     if block.startswith(
         ("# ", "## ", "### ", "#### ", "##### ", "###### ")
         ):
