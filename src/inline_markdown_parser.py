@@ -25,7 +25,7 @@ def split_nodes_delimiter(
     return new_nodes
 
 
-def single_node_delimiter(node: object, delimiter: str) -> list[object]:
+def single_node_delimiter(node: object, delimiter: str) -> list[TextNode]:
     valid_delimiters = {
         "`": TextType.CODE,
         "**": TextType.BOLD,
@@ -77,7 +77,7 @@ def single_node_delimiter(node: object, delimiter: str) -> list[object]:
                 new_nodes.append(TextNode(inner_text, target_type))
     return new_nodes
 
-def split_nodes_link(old_nodes: list[object]) -> list[object]:
+def split_nodes_link(old_nodes: list[object]) -> list[TextNode]:
     
     new_nodes = []
 
@@ -112,7 +112,7 @@ def split_nodes_link(old_nodes: list[object]) -> list[object]:
 
     return new_nodes
 
-def split_nodes_images(old_nodes: list[object]) -> list[object]:
+def split_nodes_images(old_nodes: list[object]) -> list[TextNode]:
     
     new_nodes = []
 

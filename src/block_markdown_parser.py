@@ -30,7 +30,7 @@ def markdown_to_blocks(markdown: str) -> list[str]:
     blocks = markdown.strip().split("\n\n")
     return [block.strip() for block in blocks if block.strip() != ""]
 
-def block_to_block_type(block: str) -> Enum:
+def block_to_block_type(block: str) -> BlockType:
     if block.startswith(
         ("# ", "## ", "### ", "#### ", "##### ", "###### ")
         ):
