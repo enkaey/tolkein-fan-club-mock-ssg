@@ -25,7 +25,7 @@ def generate_page(
     template_v1 = template.replace("{{ Title }}", page_title)
     template_v2 = template_v1.replace("{{ Content }}", page_html)
     template_v3 = template_v2.replace('href="/', f'href="{basepath}')
-    complete_template = template_v3.replace('src="/', f'href="{basepath}')
+    complete_template = template_v3.replace('src="/', f'src="{basepath}')
 
     #Create the file
 
