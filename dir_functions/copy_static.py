@@ -1,7 +1,7 @@
 import os
 import shutil
 
-def delete_and_recreate(dir: str = "public") -> None:
+def delete_and_recreate(dir: str = "docs") -> None:
     abs_path = os.path.abspath(dir)
 
     # Only try to delete if the directory actually exists
@@ -11,7 +11,7 @@ def delete_and_recreate(dir: str = "public") -> None:
     # Recreate it fresh
     os.mkdir(abs_path)
 
-def copy_static_files(src: str = "static", dst: str = "public") -> None:
+def copy_static_files(src: str = "static", dst: str = "docs") -> None:
     # Create a clean-slate EXACTLY ONCE for the public directory
     delete_and_recreate(dst)
 
