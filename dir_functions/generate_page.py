@@ -3,7 +3,7 @@ from src.extract_title import extract_title
 from src.markdown_to_html_node import markdown_to_html_node
 
 def generate_page(
-        from_path: str, template_path: str, dest_path: str
+        from_path: str, template_path: str, dest_path: str, basepath: str
         ) -> None:
     
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
@@ -22,8 +22,10 @@ def generate_page(
     page_html =  html_node.to_html()
     page_title = extract_title(markdown)
 
-    template_with_title = template.replace("{{ Title }}", page_title)
-    complete_template = template_with_title.replace("{{ Content }}", page_html)
+    template_v1 = template.replace("{{ Title }}", page_title)
+    template_v2 = template_v1.replace("{{ Content }}", page_html)
+    template_v3 = template_v2.replace('href="/', f'href="{basepath}')
+    complete_template = template_v3.replace('src="/', f'href="{basepath}')
 
     #Create the file
 
@@ -43,7 +45,7 @@ def generate_page(
         file.write(complete_template)
 
 def generate_pages_recursive(
-        from_path: str, template_path: str, dest_path: str
+        from_path: str, template_path: str, dest_path: str, basepath: str
         ) -> None:
     abs_from_path = os.path.abspath(from_path)
     abs_dest_path = os.path.abspath(dest_path)
@@ -56,7 +58,7 @@ def generate_pages_recursive(
         if os.path.isfile(item_path):
             html_filename = item.replace(".md", ".html")
             dest_item_path = os.path.join(abs_dest_path, html_filename)
-            generate_page(item_path, template_path, dest_item_path)
+            generate_page(item_path, template_path, dest_item_path, basepath)
         else:
             dest_item_path = os.path.join(abs_dest_path, item)
-            generate_pages_recursive(item_path, template_path, dest_item_path)
+            generate_pages_recursive(item_path, template_path, dest_item_path, basepath)

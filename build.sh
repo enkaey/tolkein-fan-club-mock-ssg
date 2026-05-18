@@ -1,0 +1,1 @@
+uv run python3 -m src.main /tolkein-fan-club-mock-ssg/
